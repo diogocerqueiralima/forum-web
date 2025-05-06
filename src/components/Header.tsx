@@ -1,7 +1,21 @@
+'use client'
+
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
+import {useUserService} from "@/context/UserServiceContext";
+import {useEffect, useState} from "react";
+import User from "@/model/User";
+import Image from "next/image";
 
 export default function Header() {
+
+    const userService = useUserService();
+    const [me, setMe] = useState<User | null>(null);
+
+    useEffect(() => {
+        userService.getMe()
+            .then(me => setMe(me))
+    }, [userService])
 
     return (
 
@@ -21,6 +35,10 @@ export default function Header() {
                 >
                     Create Topic
                 </Link>
+
+                { me &&
+                    <Image className="rounded-full" width={40} height={40} src={me.picture} alt={"My picture"} />
+                }
 
             </div>
 
